@@ -20,4 +20,4 @@ Book Reservations for Milo SteakHouse in the city of Carson. KnockoutJS applicat
 
 ## License
 
-Student Averages is licensed under the [MIT license](http://opensource.org/licenses/MIT).
+Milo SteakHouse is licensed under the [MIT license](http://opensource.org/licenses/MIT).
