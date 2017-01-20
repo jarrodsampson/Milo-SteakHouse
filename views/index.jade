@@ -1,5 +1,233 @@
-extends layout
-
-block content
-  h1= title
-  p Welcome to #{title}
+doctype html
+html(lang='en-US')
+  head
+    meta(charset='utf-8')
+    title Reservations - Planlodge
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge,chrome=1')
+    link(rel='shortcut icon', type='image/png', href='//www.roulette-roulette.info/img/money-icon.png')
+    // Import Google Icon Font
+    link(href='//fonts.googleapis.com/icon?family=Material+Icons', rel='stylesheet')
+    // Compiled and minified CSS
+    link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css')
+    link(rel='stylesheet', href='/stylesheets/main.css')
+  body
+    img.banner(src='/images/banner.png')
+    #wrapper
+      .row
+        .col.s12
+          h2 Milo SteakHouse Reservations
+          blockquote.hide-on-small-only
+            | Book Reservations for Milo SteakHouse in the city of Carson.
+          .col.s12.no-padding
+            .col.s6
+              a.tooltipped.waves-effect.waves-light.red.darken-2.btn.btn-large(data-bind='click: addSeat, css: { disabled: seats().length >= 5 }', data-position='bottom', data-delay='50', data-tooltip='Add a new seating Reservation')
+                | Reserve Seat
+              span &nbsp;
+              a.tooltipped.waves-effect.waves-light.red.darken-1.btn.btn-large.modal-trigger(href='#confirmer', data-bind='css: { disabled: seats().length < 1 }', data-position='bottom', data-delay='50', data-tooltip='Clear Occupied Seats')
+                | Clear Seats
+            .col.s12
+              p
+                em
+                  | Currently
+                  span(data-bind='text: seats().length')
+                  |  Seats Reserved.
+      .row
+        .col.s12
+          .col.s4
+            input.form-control(type='search', data-bind='textInput: query', autocomplete='off', placeholder='Search Reservations..')
+          .col.s12
+            table.highlight.centered
+              thead
+                tr
+                  th ID
+                  th Customer Name
+                  th Notes
+                  th Price
+                  th
+              tbody(data-bind='foreach: filteredSeatsByName')
+                tr
+                  td
+                    span(data-bind='text: $index() + 1')
+                  td
+                    input(data-bind='textInput: name', placeholder='Customer Name')
+                  td
+                    input(data-bind='textInput: note', placeholder='Note')
+                  td(data-bind='text: formattedPrice')
+                  td
+                    a.waves-effect.waves-light.red.darken-2.btn.btn-large(data-bind='click: $root.removeSeat')
+                      i.medium.material-icons.icon-purple delete
+            p(data-bind='visible: filteredSeatsByName().length < 1')
+              strong No Active Reservations Found.
+            h3(data-bind='visible: totalSurcharge() > 0')
+              | Total surcharge: $
+              span(data-bind='text: totalSurcharge().toFixed(2)')
+            a.tooltipped.waves-effect.waves-light.red.darken-3.btn.btn-large.modal-trigger(data-bind='visible: seats().length > 0', href='#save', data-position='top', data-delay='50', data-tooltip='Review Reservation and Finalize') Save Reservation
+          // basic modal
+          // Modal Structure
+          #save.modal
+            .modal-content
+              h4 Price Breakdown
+              p Summary:
+              div(data-bind='foreach: seats')
+                p
+                  span(data-bind='text: name')
+                  br
+                  |                            Meal Cost:
+                  strong
+                    span(data-bind='text: formattedPrice')
+                  br
+                  em
+                    span(data-bind='text: note')
+              p
+                | Total:
+                strong
+                  | $
+                  span(data-bind='text: totalSurcharge().toFixed(2)')
+            .modal-footer
+              a.modal-action.modal-close.waves-effect.waves-green.btn-flat(href='#!', data-bind='click: saveSeats') Commit Reservation
+              a.modal-action.modal-close.waves-effect.waves-green.btn-flat(href='#!') Close
+          // basic modal
+          // Modal Structure
+          #confirmer.modal
+            .modal-content
+              h4 Clear Table?
+              p Are you sure you want to clear this table? This cannot be undone.
+            .modal-footer
+              a.modal-action.modal-close.waves-effect.waves-green.btn-flat(href='#!') Cancel
+              a.modal-action.modal-close.waves-effect.waves-green.btn-flat(href='#!', data-bind='click: removeAllSeats') Clear Table
+      // floating vertical action button
+      .row
+        .col.s12
+          #new.fixed-action-btn.click-to-toggle(style='top: 45px; right: 24px;')
+            a.btn-floating.btn-large.red.modal-trigger(href='#info')
+              i.large.material-icons info_outline
+          // basic modal
+          // Modal Structure
+          #info.modal
+            .modal-content
+              h4 Milo SteakHouse Reservation
+              p
+                // todo description here
+            .modal-footer
+              a.modal-action.modal-close.waves-effect.waves-green.btn-flat(href='#!') Got It
+    footer.page-footer.red.darken-2
+      .container
+        .row
+          .col.l6.s12
+            h5.white-text Summary
+            p.grey-text.text-lighten-4
+              | App Design and code made by Jarrod Sampson. Made with KnockoutJS and MaterializeCSS.
+          .col.l4.offset-l2.s12
+            //
+              <h5 class="white-text">Links</h5>
+              <ul>
+              <li><a class="grey-text text-lighten-3" href="#!">Link 1</a></li>
+              <li><a class="grey-text text-lighten-3" href="#!">Link 2</a></li>
+              <li><a class="grey-text text-lighten-3" href="#!">Link 3</a></li>
+              <li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
+              </ul>
+      .footer-copyright
+        .container
+          | © 2017 Milo SteakHouse Restaurants
+          a.grey-text.text-lighten-4.right(href='#!') Portfolio
+    // spinner
+    .overlay
+      .preloader-wrapper.active.loader
+        .spinner-layer.spinner-red-only
+          .circle-clipper.left
+            .circle
+          .gap-patch
+            .circle
+          .circle-clipper.right
+            .circle
+    script(src='//code.jquery.com/jquery-3.1.1.min.js', integrity='sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=', crossorigin='anonymous')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-min.js')
+    // Compiled and minified JavaScript
+    script(src='//cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js')
+    script.
+      $(document).ready(function(){
+      // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+      $('.modal-trigger').leanModal({
+      dismissible: true, // Modal can be dismissed by clicking outside of the modal
+      opacity: .5, // Opacity of modal background
+      in_duration: 300, // Transition in duration
+      out_duration: 200, // Transition out duration
+      ready: function() {  }, // Callback for Modal open
+      complete: function() {  } // Callback for Modal close
+      });
+      $('.overlay').delay(1000).fadeOut(1000);
+      $('.parallax').parallax();
+      });
+      function SeatReservation(name, initialMeal, note) {
+      var self = this;
+      self.name = ko.observable(name);
+      self.meal = ko.observable(initialMeal);
+      self.note = ko.observable(note);
+      self.formattedPrice = ko.computed(function() {
+      var price = self.meal().price;
+      return price ? "$" + price.toFixed(2) : "None";
+      });
+      }
+      function AppViewModel() {
+      var self = this;
+      self.availableMeals = [
+      { mealName: "Standard (sandwich)", price: 0 },
+      { mealName: "Premium (lobster)", price: 34.95 },
+      { mealName: "Ultimate (whole zebra)", price: 290 }
+      ];
+      self.seats = ko.observableArray([
+      new SeatReservation("Steve", self.availableMeals[1], "Sample Text"),
+      new SeatReservation("Bert", self.availableMeals[2], "Notes Taken")
+      ]);
+      self.totalSurcharge = ko.computed(function() {
+      var total = 0;
+      for (var i = 0; i < self.seats().length; i++)
+      total += self.seats()[i].meal().price;
+      return total;
+      });
+      self.addSeat = function() {
+      if (self.seats().length >= 5) {
+      Materialize.toast('Cannot Add More than 5 Reservations.', 2000);
+      } else {
+      self.seats.push(new SeatReservation("", self.availableMeals[1], "Note for Customer"));
+      Materialize.toast('Added a new Reservation.', 2000);
+      }
+      };
+      self.removeSeat = function(seat) {
+      self.seats.remove(seat);
+      Materialize.toast("Seat Has Been Removed.", 2000);
+      };
+      self.removeAllSeats = function() {
+      if (self.seats().length > 0) {
+      self.seats([]);
+      Materialize.toast("All Seats have been cleared.", 2000);
+      }
+      };
+      self.saveSeats = function() {
+      $('.overlay').fadeIn(1000).delay(1000).fadeOut(1000);
+      Materialize.toast("Loading...", 2000, '', function(){
+      Materialize.toast("Reservations for " + self.seats().length + " at this table has been saved.", 4000);
+      self.seats([]);
+      });
+      };
+      self.query = ko.observable("");
+      self.filteredSeatsByName = ko.computed(function () {
+      var filter = self.query().toLowerCase();
+      if (!filter) {
+      return self.seats();
+      } else {
+      return ko.utils.arrayFilter(self.seats(), function (item) {
+      return item.name().toLowerCase().indexOf(filter) !== -1;
+      });
+      }
+      });
+      }
+      ko.bindingHandlers.materializeDropdown = {
+      init: function(element, valueAccessor) {
+      $(element).material_select();
+      },
+      update: function(element, valueAccessor, allBindings) {
+      }
+      };
+      ko.applyBindings(new AppViewModel());
