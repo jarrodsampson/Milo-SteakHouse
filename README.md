@@ -5,7 +5,7 @@ Book Reservations for Milo SteakHouse in the city of Carson. Designed by [planlo
 [![Build Status](https://travis-ci.org/stevenbenner/jquery-powertip.svg?branch=master)](https://travis-ci.org/stevenbenner/jquery-powertip)
 ![License](https://img.shields.io/packagist/l/doctrine/orm.svg)
 
-![Image](https://github.com/planlodge/Student-Average/blob/master/public/img/screen.png?raw=true)
+![Image](https://github.com/planlodge/Milo-SteakHouse/blob/master/public/images/screen5.png?raw=true)
 
 ## Description
 
